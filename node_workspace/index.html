@@ -10,7 +10,7 @@
         $(function () {
             $('.emotion').qqFace({
                 assign: 'm', //给那个控件赋值
-                path: 'face/'	//表情存放的路径
+                path: 'public/imgs/face/'	//表情存放的路径
             });
             $(".sub_btn").click(function () {
                 var str = $("#m").val();
@@ -23,7 +23,7 @@
             str = str.replace(/\</g, '&lt;');
             str = str.replace(/\>/g, '&gt;');
             str = str.replace(/\n/g, '<br/>');
-            str = str.replace(/\[em_([0-9]*)\]/g, '<img src="face/$1.gif" border="0" />');
+            str = str.replace(/\[em_([0-9]*)\]/g, '<img src="public/imgs/face/$1.gif" border="0" />');
             return str;
         }
     </script>
@@ -111,7 +111,7 @@
         span.emotion {
             width: 42px;
             height: 20px;
-            background: url(views/icon.gif) no-repeat 2px 2px;
+            background: url(/public/imgs/icon.gif) no-repeat 2px 2px;
             background: #eeeeee;
             cursor: pointer
         }

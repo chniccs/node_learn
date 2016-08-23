@@ -4,14 +4,19 @@
 
 var express=require('express');
 var app=express();
+var path = require('path');
 var http=require('http').Server(app);
 var io=require('socket.io')(http);
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
 app.get('/chat',function(req,res){
     // res.sendFile(__dirname+'/routes/index.html');
-    res.sendFile(__dirname+'/index.html');
+    // res.sendFile(__dirname+'/views/chat.jade');
+    res.render('chat', { title: 'Express' });
 });
-
+app.use('/public', express.static(__dirname + '/public'));
 var onlineUserCount=0; //客户端连接数量
 var onlineUsers={}; //统计客户端登录用户
 
