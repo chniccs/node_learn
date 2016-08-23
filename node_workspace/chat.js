@@ -8,6 +8,7 @@ var http=require('http').Server(app);
 var io=require('socket.io')(http);
 
 app.get('/chat',function(req,res){
+    // res.sendFile(__dirname+'/routes/index.html');
     res.sendFile(__dirname+'/index.html');
 });
 
