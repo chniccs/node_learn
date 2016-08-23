@@ -31,6 +31,4 @@ app.get('/',function (req,res,next) {
 });
 
 
-app.listen(8080,function(){
-	console.log('开始执行');
-});
+app.listen(process.env.PORT || 5000);
