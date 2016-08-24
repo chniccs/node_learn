@@ -1,0 +1,181 @@
+doctype html
+html
+  head
+    title Socket.IO chat
+    script(src='http://code.jquery.com/jquery-1.11.1.js')
+    script(type='text/javascript', src='jquery-1.7.2.min.js')
+    script(type='text/javascript', src='jquery.qqFace.js')
+    script(type='text/javascript').
+      $(function () {
+        $('.emotion').qqFace({
+          assign: 'm', //给那个控件赋值
+          path: 'public/imgs/face/'	//表情存放的路径
+        });
+        $(".sub_btn").click(function () {
+          var str = $("#m").val();
+          $("#show").html(replace_em(str));
+        });
+      });
+      //替换表情
+      function replace_em(str) {
+        str = str.replace(/\\</g, '&lt;');
+        str = str.replace(/\\>/g, '&gt;');
+        str = str.replace(/\\n/g, '<br/>');
+        str = str.replace((/\\[em_([0-9]*)\]/g), '<img src="public/imgs/face/$1.gif" border="0" />');
+        return str;
+      }
+    style.
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font: 13px Helvetica, Arial;
+      }
+      div {
+        background: #454;
+        padding: 3px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+      div input {
+        border: 0;
+        padding: 10px;
+        width: 90%;
+        margin-right: .5%;
+      }
+      div button {
+        padding: 4px;
+        width: auto;
+        background: rgb(130, 224, 255);
+        border: none;
+      }
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #messages li {
+        padding: 5px 10px;
+      }
+      #messages li:nth-child(odd) {
+        background: #eee;
+      }
+      p {
+        padding: 5px 10px;
+      }
+      /*QQ表情*/
+      .comment {
+        width: 680px;
+        margin: 20px auto;
+        position: relative;
+      }
+      .comment h3 {
+        height: 28px;
+        line-height: 28px
+      }
+      .com_form {
+        width: 100%;
+        position: relative
+      }
+      .input {
+        width: 99%;
+        height: 60px;
+        border: 1px solid #ccc
+      }
+      .com_form p {
+        height: 28px;
+        line-height: 28px;
+        position: relative
+      }
+
+      span.emotion {
+        width: 42px;
+        height: 20px;
+        background: url(../public/imgs/icon.gif) no-repeat 2px 2px;
+        background: #eeeeee;
+        cursor: pointer
+      }
+      span.emotion:hover {
+        background-position: 2px -28px
+      }
+      .qqFace {
+        margin-top: 4px;
+        background: #fff;
+        padding: 2px;
+        border: 1px #dfe6f6 solid;
+      }
+      .qqFace table td {
+        padding: 0px;
+      }
+      .qqFace table td img {
+        cursor: pointer;
+        border: 1px #fff solid;
+      }
+      .qqFace table td img:hover {
+        border: 1px #0066cc solid;
+      }
+      #show {
+        width: auto;
+        margin: 20px auto;
+      }
+  body
+    p#onlineUser 在线人数:0
+    ul#messages
+    #show
+    div(action='')
+      input#m(autocomplete='off')
+      span#emotion.emotion 表情
+      button.sub_btn(onclick='send()') send
+      // <p><span id="emotion" class="emotion">表情</span>
+      // <input type="button" class="sub_btn" value="提交"></p>
+    script(src='https://cdn.socket.io/socket.io-1.2.0.js')
+    script(type='text/javascript').
+      var myName = false;
+      var socket = io('http://localhost:3000');
+      socket.on('open', function () {
+        $('#messages').append($('<li>').text('已连接至服务器,请输入昵称'));
+      });
+      //监听system事件，判断welcome或者disconnect，打印系统消息
+      socket.on('system', function (json) {
+        var sep = '';
+        var onlinehtml = '';
+        var onlineUsers = json.onlineUsers;
+        for (key in onlineUsers) {
+          if (onlineUsers.hasOwnProperty(key)) {
+            onlinehtml += sep + onlineUsers[key];
+            sep = '、';
+          }
+        }
+        if (json.type === 'welcome') {
+          $('#messages').append($('<li>').text('Sys(' + json.time + ')welcome ' + json.text));
+          $('#onlineUser').text('在线人数:' + json.onlineUserCount + '。在线列表:' + onlinehtml);
+        } else if (json.type === 'disconnect') {
+          $('#messages').append($('<li>').text('Sys(' + json.time + ')bye ' + json.text + ''));
+          $('#onlineUser').text('在线人数:' + json.onlineUserCount + '。在线列表:' + onlinehtml);
+        }
+      });
+      //监听服务端的chat message事件，接受每一条消息
+      socket.on('chat message', function (json) {
+        $('#messages').append($('<li>').text(json.author + '(' + json.time + ')' + ':' + '<a>'+json.text)+"</a>");
+      });
+      $('#m').keydown(function (e) {
+        if (e.keyCode === 13) {
+          socket.emit('chat message', $('#m').val());
+          //            socket.send($('#m').val());
+          $('#m').val('');
+          if (myName === false) {
+            myName = $('#m').val();
+          }
+        }
+      })
+      function send() {
+        //        socket.emit('chat message', $('#m').val());
+        socket.emit('chat message', replace_em($('#m').val()));
+        $('#m').val('');
+        if (myName === false) {
+          myName = $('#m').val();
+        }
+      }
