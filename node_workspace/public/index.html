@@ -3,7 +3,6 @@
 <head>
     <title>Socket.IO chat</title>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-
     <script type="text/javascript" src="javascript/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="javascript/jquery.qqFace.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
@@ -184,8 +183,7 @@
 <script type="text/javascript">
     var myName = false;
 
-//    var socket = io('http://localhost:3000');
-
+    var socket = io('http://localhost:3000');
     var socket = io('http://120.25.120.221:3000');
     socket.on('open', function () {
         $('#messages').append($('<li>').text('已连接至服务器,请输入昵称'));
