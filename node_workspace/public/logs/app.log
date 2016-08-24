@@ -1,0 +1,14 @@
+[2016-08-24 15:57:19.166] [INFO] console - server begin...
+[2016-08-24 15:58:07.994] [INFO] console - false disconnect,当前在线人数:-1
+[2016-08-24 15:58:13.423] [FATAL] [default] - chat message:haha
+[2016-08-24 15:58:13.424] [INFO] console - chat message:haha
+[2016-08-24 15:58:13.424] [INFO] console - haha login,当前在线人数:0
+[2016-08-24 15:58:18.581] [FATAL] [default] - chat message:111
+[2016-08-24 15:58:18.581] [INFO] console - chat message:111
+[2016-08-24 15:58:18.581] [INFO] console - haha say:111
+[2016-08-24 16:00:06.379] [FATAL] [default] - chat message:11
+[2016-08-24 16:00:06.379] [INFO] console - chat message:11
+[2016-08-24 16:00:06.380] [INFO] console - haha say:11
+[2016-08-24 16:00:12.803] [FATAL] [default] - chat message:123
+[2016-08-24 16:00:12.803] [INFO] console - chat message:123
+[2016-08-24 16:00:12.803] [INFO] console - haha say:123

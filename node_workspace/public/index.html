@@ -19,19 +19,24 @@
             font: 13px Helvetica, Arial;
         }
 
-        div {
-            background: #454;
-            padding: 3px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+        /*div {*/
+        /*background: #454;*/
+        /*padding: 3px;*/
+        /*position: fixed;*/
+        /*bottom: 0;*/
+        /*width: 100%;*/
+        /*}*/
 
         div input {
             border: 0;
             padding: 10px;
-            width: 90%;
+            width: 80%;
             margin-right: .5%;
+        }
+
+        div ul {
+            bottom: auto;
+            position: fixed;
         }
 
         div button {
@@ -42,10 +47,15 @@
 
         }
 
+        ul {
+            position: fixed;
+        }
+
         #messages {
             list-style-type: none;
             margin: 0;
             padding: 0;
+            position: relative;
         }
 
         #messages li {
@@ -96,7 +106,7 @@
         span.emotion {
             width: 42px;
             height: 20px;
-            background: url(imgs/icon.gif) no-repeat 2px 2px;
+            /*background: url(imgs/icon.gif) no-repeat 2px 2px;*/
             background: #eeeeee;
             cursor: pointer
         }
@@ -126,6 +136,18 @@
             border: 1px #0066cc solid;
         }
 
+        .input {
+            background: #454;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .content {
+            margin-bottom: 5%;
+        }
+
         #show {
             width: auto;
             margin: 20px auto;
@@ -136,15 +158,23 @@
 </head>
 
 <body>
+
 <p id="onlineUser">在线人数:0</p>
-<ul id="messages"></ul>
+
+
+<div class="content">
+
+    <ul id="messages"></ul>
+    <a name="anchor"></a>
+</div>
+
 
 <div id="show"></div>
 
+<div action="" class="input">
 
-<div action="">
     <span id="tools">
-        <span id="emotion" class="emotion">表情</span>
+        <span id="emotion" class="emotion" style="background: url('imgs/icon.gif')">____</span>
     </span>
     <input id="m" autocomplete="off"/>
 
@@ -154,13 +184,16 @@
 <script type="text/javascript">
     var myName = false;
 
-    var socket = io('http://localhost:3000');
+//    var socket = io('http://localhost:3000');
+
+    var socket = io('http://120.25.120.221:3000');
     socket.on('open', function () {
         $('#messages').append($('<li>').text('已连接至服务器,请输入昵称'));
     });
 
     //监听system事件，判断welcome或者disconnect，打印系统消息
     socket.on('system', function (json) {
+        location.href = "#anchor";
         var sep = '';
         var onlinehtml = '';
         var onlineUsers = json.onlineUsers;
@@ -172,17 +205,17 @@
         }
 
         if (json.type === 'welcome') {
-            $('#messages').append($('<li>').text('Sys(' + json.time + ')welcome ' + json.text));
+            $('#messages').append($('<li>').text(json.author+'(' + json.time + ')欢迎 ' + json.text));
             $('#onlineUser').text('在线人数:' + json.onlineUserCount + '。在线列表:' + onlinehtml);
         } else if (json.type === 'disconnect') {
-            $('#messages').append($('<li>').text('Sys(' + json.time + ')bye ' + json.text + ''));
+            $('#messages').append($('<li>').text(json.author+'(' + json.time + ')' + json.text + ' 离开了。'));
             $('#onlineUser').text('在线人数:' + json.onlineUserCount + '。在线列表:' + onlinehtml);
         }
     });
 
     //监听服务端的chat message事件，接受每一条消息
     socket.on('chat message', function (json) {
-
+        location.href = "#anchor";
         $('#messages').append($('<li>').text(json.author + '(' + json.time + ')').append((json.text)));
     });
 
@@ -202,6 +235,7 @@
         if (myName === false) {
             myName = $('#m').val();
         }
+
     }
 
 

@@ -11,12 +11,30 @@ path = require('path'),
 
 app.get('/chat',function(req,res){
     // res.sendFile(__dirname+'/routes/index.html');
-    res.sendFile(__dirname+'/index.html');
+    res.send("欢迎访问");
 });
 
 var onlineUserCount=0; //客户端连接数量
 var onlineUsers={}; //统计客户端登录用户
 app.use(express.static('public'));
+
+//log4js日志
+// var log4js=require('log4js');//注意log4js的module位置引用是否正确
+//
+// log4js.configure({
+//     appenders: [
+//         {
+//             type: "file",
+//             filename: "public/logs/app.log"
+//             // category:'app' //之间加了category后发现无法写入文件，
+//         },
+//         {
+//             type: "console"
+//         }
+//     ],
+//     replaceConsole: true
+// });
+// var logger=log4js.getLogger();
 
 io.on('connection',function(socket){
     socket.emit('open');  //通知客户端已连接
@@ -30,6 +48,7 @@ io.on('connection',function(socket){
     //监听客户端的chat message事件， 该事件由客户端触发
     //当服务端收到消息后，再把该消息播放出去，继续触发chat message事件， 然后在客户端监听chat message事件。
     socket.on('chat message',function(msg){
+        // logger.fatal('chat message:'+msg);
         console.log('chat message:'+msg);
         var obj={time:getTime()}; //构建客户端返回的对象
 
@@ -39,7 +58,7 @@ io.on('connection',function(socket){
 
             client.name=msg;
             obj['text']=client.name;
-            obj['author']='Sys';
+            obj['author']='*系统消息';
             obj['type']='welcome';
             obj['onlineUserCount']=onlineUserCount;
             socket.name=client.name; //用户登录后设置socket.name， 当退出时用该标识删除该在线用户
@@ -68,7 +87,9 @@ io.on('connection',function(socket){
     });
 
     socket.on('disconnect',function(){
-        onlineUserCount--;
+        if(client.name){
+            onlineUserCount--;
+        }
 
         if(onlineUsers.hasOwnProperty(socket.name)){
             delete onlineUsers[client.name];
@@ -76,8 +97,8 @@ io.on('connection',function(socket){
 
         var obj={
             time:getTime(),
-            author:'Sys',
-            text:client.name,
+            author:'*系统消息:',
+            text:!client.name?'无名氏':client.name,
             type:'disconnect',
             onlineUserCount:onlineUserCount,
             onlineUsers:onlineUsers
