@@ -7,6 +7,8 @@ var app=express();
 var http=require('http').Server(app);
 var io=require('socket.io')(http);
 
+path = require('path'),
+
 app.get('/chat',function(req,res){
     // res.sendFile(__dirname+'/routes/index.html');
     res.sendFile(__dirname+'/index.html');
@@ -14,6 +16,7 @@ app.get('/chat',function(req,res){
 
 var onlineUserCount=0; //客户端连接数量
 var onlineUsers={}; //统计客户端登录用户
+app.use(express.static('public'));
 
 io.on('connection',function(socket){
     socket.emit('open');  //通知客户端已连接
