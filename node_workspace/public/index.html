@@ -183,8 +183,8 @@
 <script type="text/javascript">
     var myName = false;
 
-    var socket = io('http://localhost:3000');
-    var socket = io('http://120.25.120.221:3000');
+//    var socket = io('http://localhost:80');
+    var socket = io('http://120.25.120.221:80');
     socket.on('open', function () {
         $('#messages').append($('<li>').text('已连接至服务器,请输入昵称'));
     });
