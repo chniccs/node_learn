@@ -12,7 +12,7 @@ path = require('path');
 app.use(express.static('public'));
 app.get('/', function (req, res) {
     // res.sendFile(__dirname+'/routes/index.html');
-    res.send("欢迎访问<a href='index.html'>进入群聊</a>>");
+    res.send("欢迎访问<a href='index.html'>进入群聊</a>");
 });
 
 var onlineUserCount = 0; //客户端连接数量
